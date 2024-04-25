@@ -3,9 +3,16 @@ version: '3.7'
 services:
   pg: 
     image: bitnami/postgresql:latest
+    container_name: fsw-foods-postgres
     ports:
       - '5432:5432'
     environment:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=postgres
       - POSTGRESQL_DATABASE=fsw-foods
+    
+    volumes:
+      - ./.postgres-data:/var/lib/postgresql/data
+  
+volumes:
+  .postgres-data:
