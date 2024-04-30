@@ -6,8 +6,25 @@ import { Header } from './_components/header'
 import { ProductList } from './_components/product-list'
 import { Search } from './_components/search'
 import { Button } from './_components/ui/button'
+import { db } from './_lib/prisma'
 
-export default function Home() {
+export default async function Home() {
+  const products = await db.product.findMany({
+    where: {
+      discountPercentage: {
+        gt: 0,
+      },
+    },
+    include: {
+      restaurant: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    take: 10,
+  })
+
   return (
     <div>
       <Header />
@@ -45,7 +62,7 @@ export default function Home() {
           </Button>
         </div>
 
-        <ProductList />
+        <ProductList products={products} />
       </div>
     </div>
   )
