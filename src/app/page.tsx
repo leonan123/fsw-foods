@@ -4,6 +4,7 @@ import { CategoryList } from './_components/category-list'
 import { Header } from './_components/header'
 import { ProductList } from './_components/product-list'
 import { PromoBanner } from './_components/promo-banner'
+import { RestaurantList } from './_components/restaurant-list'
 import { Search } from './_components/search'
 import { Button } from './_components/ui/button'
 import { db } from './_lib/prisma'
@@ -65,6 +66,22 @@ export default async function Home() {
           src="/promo-banner-02.png"
           alt="A partir de R$17,90 em Lanches"
         />
+      </div>
+
+      <div className="mt-6 space-y-4 pb-6">
+        <div className="flex items-center justify-between px-5">
+          <h2 className="font-semibold">Restaurantes recomendados</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-fit p-0 text-primary hover:bg-transparent"
+          >
+            Ver todos
+            <ChevronRightIcon size={16} />
+          </Button>
+        </div>
+
+        <RestaurantList />
       </div>
     </div>
   )
