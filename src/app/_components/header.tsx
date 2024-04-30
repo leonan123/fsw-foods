@@ -2,7 +2,7 @@ import { MenuIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Button } from './button'
+import { Button } from './ui/button'
 
 export function Header() {
   return (

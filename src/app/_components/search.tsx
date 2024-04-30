@@ -1,7 +1,7 @@
 import { SearchIcon } from 'lucide-react'
 
-import { Button } from './button'
 import { Input } from './input'
+import { Button } from './ui/button'
 
 export function Search() {
   return (
