@@ -7,13 +7,13 @@ interface CategoryItemProps {
 
 export function CategoryItem({ category }: CategoryItemProps) {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-muted/50 px-4 py-3 shadow-md">
+    <div className="inline-flex snap-start items-center gap-2 rounded-full border border-muted/50 px-4 py-3 shadow-md">
       <div className="relative size-6">
         <Image
           src={category.imageUrl}
           alt={category.name}
           fill
-          objectFit="contain"
+          className="object-contain"
         />
       </div>
       <span className="text-sm font-semibold">{category.name}</span>
