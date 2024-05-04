@@ -58,8 +58,9 @@ export function ProductDetails({
             src={product.restaurant.imageUrl}
             alt={product.restaurant.name}
             fill
-            sizes="100vw"
+            sizes="100px"
             className="rounded-full object-cover"
+            priority
           />
         </div>
 

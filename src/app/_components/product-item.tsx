@@ -38,6 +38,7 @@ export function ProductItem({ product }: ProductItemProps) {
           src={product.imageUrl}
           alt={product.name}
           fill
+          sizes="350px"
           className="rounded-lg object-cover shadow-md"
         />
       </div>

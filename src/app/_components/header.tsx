@@ -8,7 +8,13 @@ export function Header() {
   return (
     <header className="flex items-center justify-between px-5 pt-6">
       <Link href="#">
-        <Image src="/logo.svg" alt="FSW Foods" width={100} height={30} />
+        <Image
+          src="/logo.svg"
+          alt="FSW Foods"
+          width={100}
+          height={30}
+          className="h-auto w-auto"
+        />
       </Link>
 
       <Button variant="ghost" size="icon">

@@ -29,7 +29,14 @@ export function ProductImage({ src, alt }: ProductImageProps) {
         <span className="sr-only">Voltar para a página anterior</span>
       </Button>
 
-      <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="100vw"
+        className="object-cover"
+        priority
+      />
     </div>
   )
 }

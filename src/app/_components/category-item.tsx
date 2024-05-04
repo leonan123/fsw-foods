@@ -13,6 +13,7 @@ export function CategoryItem({ category }: CategoryItemProps) {
           src={category.imageUrl}
           alt={category.name}
           fill
+          sizes="50px"
           className="object-contain"
         />
       </div>
