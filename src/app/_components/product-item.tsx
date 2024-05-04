@@ -1,8 +1,11 @@
+'use client'
+
 import type { Prisma, Product } from '@prisma/client'
-import { ArrowDownIcon } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { calculateProductTotalPrice, formatCurrency } from '../_helpers/price'
+import { DiscountBadge } from './discount-badge'
 
 interface ProductItemProps {
   product: Product &
@@ -19,15 +22,16 @@ interface ProductItemProps {
 
 export function ProductItem({ product }: ProductItemProps) {
   return (
-    <div className="min-w-[150px] snap-start space-y-2">
+    <Link
+      className="min-w-[150px] snap-start space-y-2"
+      href={`/products/${product.id}`}
+    >
       <div className="relative h-[150px] w-full">
         {product.discountPercentage && (
-          <div className="absolute left-2 top-2 z-10 flex items-center gap-0.5 rounded-full bg-primary px-2 py-0.5 text-muted">
-            <ArrowDownIcon size={12} strokeWidth={3} />
-            <span className="text-sm font-semibold">
-              {product.discountPercentage}%
-            </span>
-          </div>
+          <DiscountBadge
+            discountPercentage={product.discountPercentage}
+            className="absolute left-2 top-2 z-10 "
+          />
         )}
 
         <Image
@@ -55,6 +59,6 @@ export function ProductItem({ product }: ProductItemProps) {
           {product.restaurant.name}
         </span>
       </div>
-    </div>
+    </Link>
   )
 }
