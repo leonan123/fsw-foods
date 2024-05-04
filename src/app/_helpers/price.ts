@@ -18,5 +18,7 @@ export function formatCurrency(value: number): string {
     style: 'currency',
     currency: 'BRL',
     minimumFractionDigits: 2,
-  }).format(value)
+  })
+    .format(value)
+    .replace(/\s/g, '')
 }
