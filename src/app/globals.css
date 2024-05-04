@@ -50,10 +50,10 @@
 
 @layer base {
   * {
-    @apply box-border;
+    @apply box-border font-sans;
   }
 
   body {
-    @apply text-foreground antialiased bg-white/30;
+    @apply text-foreground antialiased bg-white/30 min-h-screen;
   }
 }
