@@ -68,7 +68,7 @@ export default async function Home() {
         />
       </div>
 
-      <div className="mt-6 space-y-4 pb-6">
+      <div className="mt-6 space-y-4">
         <div className="flex items-center justify-between px-5">
           <h2 className="font-semibold">Restaurantes recomendados</h2>
           <Button
