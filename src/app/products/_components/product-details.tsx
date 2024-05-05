@@ -1,19 +1,14 @@
 'use client'
 
 import type { Prisma } from '@prisma/client'
-import {
-  BikeIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClockIcon,
-} from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
+import { DeliveryInfo } from '@/app/_components/delivery-info'
 import { DiscountBadge } from '@/app/_components/discount-badge'
 import { ProductList } from '@/app/_components/product-list'
 import { Button } from '@/app/_components/ui/button'
-import { Card, CardContent } from '@/app/_components/ui/card'
 import {
   calculateProductTotalPrice,
   formatCurrency,
@@ -116,35 +111,12 @@ export function ProductDetails({
           </div>
         </div>
 
-        <Card className="mx-5">
-          <CardContent className="flex items-center justify-around py-2.5 text-xs ">
-            <div className="flex flex-col items-center justify-center gap-1">
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <span>Entrega</span>
-                <BikeIcon size={14} />
-              </div>
-
-              <p className="font-semibold">
-                {Number(product.restaurant.deliveryFee) > 0
-                  ? formatCurrency(Number(product.restaurant.deliveryFee))
-                  : 'Grátis'}
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center justify-center gap-1">
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <span>Entrega</span>
-                <ClockIcon size={14} />
-              </div>
-
-              <p className="font-semibold">
-                {product.restaurant.deliveryTimeMinutes &&
-                  product.restaurant.deliveryTimeMinutes}{' '}
-                Min
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mx-5">
+          <DeliveryInfo
+            deliveryFee={Number(product.restaurant.deliveryFee)}
+            deliveryTimeMinutes={product.restaurant.deliveryTimeMinutes}
+          />
+        </div>
 
         <div className="space-y-3 px-5">
           <h3 className="font-semibold">Sobre</h3>
