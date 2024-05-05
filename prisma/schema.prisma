@@ -25,6 +25,7 @@ model Category {
 
   restaurants Restaurant[]
   products    Product[]
+  createdAt   DateTime     @default(now()) @map("created_at")
 }
 
 model Product {
@@ -40,4 +41,5 @@ model Product {
 
   categoryId String   @map("category_id")
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @map("created_at")
 }
