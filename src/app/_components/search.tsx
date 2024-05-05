@@ -25,6 +25,7 @@ export function Search() {
         placeholder="Buscar restaurantes"
         className="flex-1 border-none"
         name="search"
+        required
         defaultValue={searchParams.get('search') ?? ''}
       />
 
