@@ -159,6 +159,10 @@ export function ProductDetails({
             <ProductList products={complementaryProducts} />
           </div>
         )}
+
+        <Button className="mx-5 mb-5" size="lg">
+          Adicionar à Sacola
+        </Button>
       </div>
     </>
   )

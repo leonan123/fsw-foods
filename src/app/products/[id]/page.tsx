@@ -59,7 +59,7 @@ export default async function ProductPage({
     <main className="h-full">
       <ProductImage src={product.imageUrl} alt={product.name} />
 
-      <div className="py-5">
+      <div className="relative z-10 -mt-5 rounded-se-3xl rounded-ss-3xl bg-white pt-5">
         <ProductDetails product={product} complementaryProducts={juices} />
       </div>
     </main>
