@@ -16,7 +16,7 @@ export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
   return (
     <Link
       className={cn('min-w-[266px] max-w-[266px] space-y-3', className)}
-      href={`/restaurant/${restaurant.id}`}
+      href={`/restaurants/${restaurant.id}`}
     >
       <div className="relative h-[136px] w-full">
         <div className="absolute left-2 top-2 z-10 flex items-center gap-1 rounded-full bg-muted px-2 py-0.5">
