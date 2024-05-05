@@ -23,7 +23,7 @@ interface ProductItemProps {
 export function ProductItem({ product }: ProductItemProps) {
   return (
     <Link
-      className="min-w-[150px] snap-start space-y-2"
+      className="aspect-square min-w-[150px] snap-start space-y-2"
       href={`/products/${product.id}`}
     >
       <div className="relative h-[150px] w-full">
