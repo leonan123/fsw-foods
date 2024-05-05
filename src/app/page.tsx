@@ -1,4 +1,5 @@
 import { ChevronRightIcon } from 'lucide-react'
+import Link from 'next/link'
 
 import { CategoryList } from './_components/category-list'
 import { Header } from './_components/header'
@@ -68,16 +69,19 @@ export default async function Home() {
         />
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="my-6 space-y-4">
         <div className="flex items-center justify-between px-5">
           <h2 className="font-semibold">Restaurantes recomendados</h2>
           <Button
             variant="ghost"
             size="sm"
             className="h-fit p-0 text-primary hover:bg-transparent"
+            asChild
           >
-            Ver todos
-            <ChevronRightIcon size={16} />
+            <Link href="/restaurant/recommended">
+              Ver todos
+              <ChevronRightIcon size={16} />
+            </Link>
           </Button>
         </div>
 

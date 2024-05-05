@@ -7,7 +7,7 @@ import { Button } from './ui/button'
 export function Header() {
   return (
     <header className="flex items-center justify-between px-5 pt-6">
-      <Link href="#">
+      <Link href="/">
         <Image
           src="/logo.svg"
           alt="FSW Foods"

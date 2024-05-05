@@ -4,16 +4,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { formatCurrency } from '../_helpers/price'
+import { cn } from '../_lib/utils'
 import { Button } from './ui/button'
 
 interface RestaurantItemProps {
   restaurant: Restaurant
+  className?: string
 }
 
-export function RestaurantItem({ restaurant }: RestaurantItemProps) {
+export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
   return (
     <Link
-      className="min-w-[266px] max-w-[266px] space-y-3"
+      className={cn('min-w-[266px] max-w-[266px] space-y-3', className)}
       href={`/restaurant/${restaurant.id}`}
     >
       <div className="relative h-[136px] w-full">
