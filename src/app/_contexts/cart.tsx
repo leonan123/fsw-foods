@@ -1,7 +1,7 @@
 'use client'
 
 import type { Prisma } from '@prisma/client'
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 import { calculateProductTotalPrice } from '../_helpers/price'
 import type { ProductWithRestaurant } from '../types/product'
@@ -15,12 +15,22 @@ export interface CartProduct
   quantity: number
 }
 
+interface AddProductToCartParams {
+  product: ProductWithRestaurant
+  quantity: number
+  emptyCart?: boolean
+}
+
 interface ICartContext {
   products: CartProduct[]
   subtotalPrice: number
   totalDiscountsPrice: number
   totalPrice: number
-  addProductToCart: (product: ProductWithRestaurant, quantity: number) => void
+  addProductToCart: ({
+    product,
+    quantity,
+    emptyCart,
+  }: AddProductToCartParams) => void
   decreaseProductQuantity: (productId: string) => void
   increaseProductQuantity: (productId: string) => void
   removeProductFromCart: (productId: string) => void
@@ -33,7 +43,15 @@ export function CartContextProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [products, setProducts] = useState<CartProduct[]>([])
+  const [products, setProducts] = useState<CartProduct[]>(() => {
+    const storedProducts = localStorage.getItem('@foodstorage:cart-1.0.0')
+
+    if (storedProducts) {
+      return JSON.parse(storedProducts)
+    }
+
+    return []
+  })
 
   const subtotalPrice = useMemo(() => {
     if (products.length === 0) {
@@ -94,7 +112,15 @@ export function CartContextProvider({
     })
   }
 
-  function addProductToCart(product: ProductWithRestaurant, quantity: number) {
+  function addProductToCart({
+    product,
+    quantity,
+    emptyCart,
+  }: AddProductToCartParams) {
+    if (emptyCart) {
+      setProducts([])
+    }
+
     setProducts((prevProducts) => {
       const productIndex = prevProducts.findIndex(
         (prevProduct) => prevProduct.id === product.id,
@@ -122,6 +148,10 @@ export function CartContextProvider({
       return prevProducts.filter((product) => product.id !== productId)
     })
   }
+
+  useEffect(() => {
+    localStorage.setItem('@foodstorage:cart-1.0.0', JSON.stringify(products))
+  }, [products])
 
   return (
     <CartContext.Provider

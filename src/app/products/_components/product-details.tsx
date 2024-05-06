@@ -8,6 +8,16 @@ import { Cart } from '@/app/_components/cart'
 import { DeliveryInfo } from '@/app/_components/delivery-info'
 import { DiscountBadge } from '@/app/_components/discount-badge'
 import { ProductList } from '@/app/_components/product-list'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/app/_components/ui/alert-dialog'
 import { Button } from '@/app/_components/ui/button'
 import {
   Sheet,
@@ -34,7 +44,14 @@ export function ProductDetails({
 }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1)
   const [isCartOpen, setIsCartOpen] = useState(false)
-  const { addProductToCart } = useCart()
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false)
+  const { addProductToCart, products } = useCart()
+
+  function addToCart({ emptyCart = false }) {
+    addProductToCart({ product, quantity, emptyCart })
+    setIsCartOpen(true)
+  }
 
   function handleIncreaseQuantity() {
     setQuantity((state) => state + 1)
@@ -51,8 +68,18 @@ export function ProductDetails({
   }
 
   function handleAddToCart() {
-    addProductToCart(product, quantity)
-    setIsCartOpen(true)
+    const hasDifferentRestaurantProduct = products.some(
+      (cartProduct) => cartProduct.restaurant.id !== product.restaurant.id,
+    )
+
+    if (hasDifferentRestaurantProduct) {
+      setIsConfirmationDialogOpen(true)
+      return
+    }
+
+    addToCart({
+      emptyCart: false,
+    })
   }
 
   return (
@@ -159,6 +186,30 @@ export function ProductDetails({
           <Cart />
         </SheetContent>
       </Sheet>
+
+      <AlertDialog
+        open={isConfirmationDialogOpen}
+        onOpenChange={setIsConfirmationDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Deseja esvaziar a sacola e adicionar esse item ?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Verificamos que você possui um produto de outro restaurante em sua
+              sacola. Você só pode fazer pedidos de um restaurante por vez. Ao
+              continuar, esta ação irá remover os outros produtos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
+              Esvaziar sacola e adicionar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
