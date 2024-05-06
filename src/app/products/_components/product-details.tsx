@@ -1,28 +1,31 @@
 'use client'
 
-import type { Prisma } from '@prisma/client'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
+import { Cart } from '@/app/_components/cart'
 import { DeliveryInfo } from '@/app/_components/delivery-info'
 import { DiscountBadge } from '@/app/_components/discount-badge'
 import { ProductList } from '@/app/_components/product-list'
 import { Button } from '@/app/_components/ui/button'
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/app/_components/ui/sheet'
+import { useCart } from '@/app/_contexts/cart'
+import {
   calculateProductTotalPrice,
   formatCurrency,
 } from '@/app/_helpers/price'
-
-type Product = Prisma.ProductGetPayload<{
-  include: {
-    restaurant: true
-  }
-}>
+import type { ProductWithRestaurant } from '@/app/types/product'
 
 interface ProductDetailsProps {
-  product: Product
-  complementaryProducts?: Product[]
+  product: ProductWithRestaurant
+  complementaryProducts?: ProductWithRestaurant[]
 }
 
 export function ProductDetails({
@@ -30,6 +33,8 @@ export function ProductDetails({
   complementaryProducts,
 }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1)
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const { addProductToCart } = useCart()
 
   function handleIncreaseQuantity() {
     setQuantity((state) => state + 1)
@@ -43,6 +48,11 @@ export function ProductDetails({
 
       return state
     })
+  }
+
+  function handleAddToCart() {
+    addProductToCart(product, quantity)
+    setIsCartOpen(true)
   }
 
   return (
@@ -132,10 +142,23 @@ export function ProductDetails({
           </div>
         )}
 
-        <Button className="mx-5 mb-5" size="lg">
+        <Button className="mx-5 mb-5" size="lg" onClick={handleAddToCart}>
           Adicionar à Sacola
         </Button>
       </div>
+
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+        <SheetContent className="flex flex-col space-y-6 bg-primary-foreground">
+          <SheetHeader className="flex flex-row items-center justify-between space-y-0">
+            <SheetTitle className="text-start">Sacola</SheetTitle>
+            <SheetClose className="rounded-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+              <XIcon size={20} />
+            </SheetClose>
+          </SheetHeader>
+
+          <Cart />
+        </SheetContent>
+      </Sheet>
     </>
   )
 }

@@ -1,7 +1,7 @@
-import type { Prisma } from '@prisma/client'
 import { notFound } from 'next/navigation'
 
 import { db } from '@/app/_lib/prisma'
+import type { ProductWithRestaurant } from '@/app/types/product'
 
 import { ProductDetails } from '../_components/product-details'
 import { ProductImage } from '../_components/product-image'
@@ -11,9 +11,6 @@ interface ProductPageProps {
     id: string
   }
 }
-type ProductWithRestaurant = Prisma.ProductGetPayload<{
-  include: { restaurant: true }
-}>
 
 export default async function ProductPage({
   params: { id },
@@ -56,7 +53,7 @@ export default async function ProductPage({
   }
 
   return (
-    <main className="h-full">
+    <main>
       <ProductImage src={product.imageUrl} alt={product.name} />
 
       <div className="relative z-10 -mt-5 rounded-se-3xl rounded-ss-3xl bg-white pt-5">
