@@ -52,9 +52,14 @@ export function CartItem({ cartProduct }: CartItemProps) {
                 calculateProductTotalPrice(cartProduct) * cartProduct.quantity,
               )}
             </h4>
-            <s className="text-xs font-light text-muted-foreground">
-              {formatCurrency(Number(cartProduct.price) * cartProduct.quantity)}
-            </s>
+
+            {cartProduct.discountPercentage > 0 && (
+              <s className="text-xs font-light text-muted-foreground">
+                {formatCurrency(
+                  Number(cartProduct.price) * cartProduct.quantity,
+                )}
+              </s>
+            )}
           </div>
 
           <div className="mt-1 flex items-center gap-1">

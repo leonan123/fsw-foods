@@ -25,7 +25,7 @@ export function Cart() {
             <Card>
               <CardContent className="flex flex-col justify-center p-5">
                 <div className="flex items-center justify-between border-b border-muted pb-2.5 text-xs">
-                  <p className="text-muted-foreground">Subtotal</p>
+                  <p className="text-muted-foreground">Subtotal + Entrega</p>
                   <p>{formatCurrency(subtotalPrice)}</p>
                 </div>
 
