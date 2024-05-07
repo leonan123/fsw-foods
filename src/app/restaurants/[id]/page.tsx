@@ -6,6 +6,7 @@ import { DeliveryInfo } from '@/app/_components/delivery-info'
 import { ProductList } from '@/app/_components/product-list'
 import { db } from '@/app/_lib/prisma'
 
+import { CartBanner } from '../_components/cart-banner'
 import { RestaurantImage } from '../_components/restaurant-image'
 
 interface RestaurantPageProps {
@@ -59,7 +60,7 @@ export default async function RestaurantPage({
   }
 
   return (
-    <main>
+    <main className="has-[[data-show=true]]:pb-16">
       <RestaurantImage alt={restaurant.name} src={restaurant.imageUrl} />
 
       <div className="relative z-10 -mt-5 rounded-se-3xl rounded-ss-3xl bg-white pb-5 pt-5">
@@ -122,6 +123,8 @@ export default async function RestaurantPage({
           </div>
         ))}
       </div>
+
+      <CartBanner restaurantId={id} />
     </main>
   )
 }

@@ -26,6 +26,7 @@ interface ICartContext {
   subtotalPrice: number
   totalDiscountsPrice: number
   totalPrice: number
+  totalQuantity: number
   addProductToCart: ({
     product,
     quantity,
@@ -52,6 +53,10 @@ export function CartContextProvider({
 
     return []
   })
+
+  const totalQuantity = useMemo(() => {
+    return products.reduce((acc, product) => acc + product.quantity, 0)
+  }, [products])
 
   const subtotalPrice = useMemo(() => {
     if (products.length === 0) {
@@ -157,6 +162,7 @@ export function CartContextProvider({
     <CartContext.Provider
       value={{
         products,
+        totalQuantity,
         subtotalPrice,
         totalDiscountsPrice,
         totalPrice,
