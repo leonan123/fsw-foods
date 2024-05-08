@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
 import { CartContextProvider } from './_contexts/cart'
+import { AuthProvider } from './_providers/auth'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -26,7 +27,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={poppins.variable}>
       <body>
-        <CartContextProvider>{children}</CartContextProvider>
+        <AuthProvider>
+          <CartContextProvider>{children}</CartContextProvider>
+        </AuthProvider>
       </body>
     </html>
   )
