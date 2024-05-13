@@ -9,7 +9,13 @@ import type { ProductWithRestaurant } from '../types/product'
 export interface CartProduct
   extends Prisma.ProductGetPayload<{
     include: {
-      restaurant: true
+      restaurant: {
+        select: {
+          id: true
+          deliveryFee: true
+          deliveryTimeMinutes: true
+        }
+      }
     }
   }> {
   quantity: number
@@ -35,6 +41,7 @@ interface ICartContext {
   decreaseProductQuantity: (productId: string) => void
   increaseProductQuantity: (productId: string) => void
   removeProductFromCart: (productId: string) => void
+  clearCart: () => void
 }
 
 const CartContext = createContext<ICartContext>({} as ICartContext)
@@ -158,6 +165,10 @@ export function CartContextProvider({
     })
   }
 
+  function clearCart() {
+    setProducts([])
+  }
+
   useEffect(() => {
     localStorage.setItem('@foodstorage:cart-1.0.0', JSON.stringify(products))
   }, [products])
@@ -174,6 +185,7 @@ export function CartContextProvider({
         decreaseProductQuantity,
         increaseProductQuantity,
         removeProductFromCart,
+        clearCart,
       }}
     >
       {children}

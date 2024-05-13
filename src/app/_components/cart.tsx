@@ -1,8 +1,20 @@
 'use client'
 
-import { NotepadTextIcon } from 'lucide-react'
-import React from 'react'
+import { OrderStatus } from '@prisma/client'
+import { Loader2Icon, NotepadTextIcon } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import React, { useState } from 'react'
 
+import { createOrder } from '../_actions/order'
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../_components/ui/alert-dialog'
 import { useCart } from '../_contexts/cart'
 import { formatCurrency } from '../_helpers/price'
 import { CartItem } from './cart-item'
@@ -10,7 +22,52 @@ import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
 
 export function Cart() {
-  const { products, subtotalPrice, totalDiscountsPrice, totalPrice } = useCart()
+  const { data } = useSession()
+  const {
+    products,
+    subtotalPrice,
+    totalDiscountsPrice,
+    totalPrice,
+    clearCart,
+  } = useCart()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+
+  async function handleFinishOrderClick() {
+    if (!data?.user) return
+
+    const restaurant = products[0].restaurant
+
+    setIsSubmitting(true)
+
+    try {
+      await createOrder({
+        subtotalPrice,
+        totalPrice,
+        totalDiscounts: totalDiscountsPrice,
+        deliveryFee: restaurant.deliveryFee,
+        deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
+        // products,
+        restaurant: {
+          connect: {
+            id: restaurant.id,
+          },
+        },
+        status: OrderStatus.CONFIRMED,
+        user: {
+          connect: { id: data.user.id },
+        },
+      })
+
+      clearCart()
+    } catch (err) {
+      console.error(err)
+      setIsSubmitting(false)
+    } finally {
+      setIsSubmitting(false)
+      setIsConfirmDialogOpen(false)
+    }
+  }
 
   return (
     <>
@@ -52,7 +109,12 @@ export function Cart() {
               </CardContent>
             </Card>
 
-            <Button size="lg" className="w-full">
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={() => setIsConfirmDialogOpen(true)}
+              disabled={isSubmitting}
+            >
               Finalizar Pedido
             </Button>
           </div>
@@ -63,6 +125,30 @@ export function Cart() {
           <p className="text-center font-medium">Seu carrinho está vazio</p>
         </div>
       )}
+
+      <AlertDialog
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja finalizar seu pedido ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Ao finalizar seu pedido, você concorda com os termos e condições
+              da nossa plataforma.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <Button onClick={handleFinishOrderClick} disabled={isSubmitting}>
+              {isSubmitting && (
+                <Loader2Icon className="mr-2 size-4 animate-spin" />
+              )}
+              Finalizar
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
