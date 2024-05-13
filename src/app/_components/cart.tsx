@@ -47,15 +47,22 @@ export function Cart() {
         totalDiscounts: totalDiscountsPrice,
         deliveryFee: restaurant.deliveryFee,
         deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
-        // products,
+        status: OrderStatus.CONFIRMED,
         restaurant: {
           connect: {
             id: restaurant.id,
           },
         },
-        status: OrderStatus.CONFIRMED,
         user: {
           connect: { id: data.user.id },
+        },
+        products: {
+          createMany: {
+            data: products.map((product) => ({
+              productId: product.id,
+              quantity: product.quantity,
+            })),
+          },
         },
       })
 

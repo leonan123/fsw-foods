@@ -103,7 +103,7 @@ export function Header() {
                   className="w-full justify-start gap-3 rounded-full border-none"
                   variant="outline"
                 >
-                  <Link href="/">
+                  <Link href="/my-orders">
                     <ScrollTextIcon size={16} />
                     <span className="text-sm font-normal">Meus Pedidos</span>
                   </Link>

@@ -40,10 +40,21 @@ model Product {
   restaurantId String     @map("restaurant_id")
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  categoryId String   @map("category_id")
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now()) @map("created_at")
-  Order      Order[]
+  categoryId    String         @map("category_id")
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  orderProducts OrderProduct[]
+}
+
+model OrderProduct {
+  id       String @id @default(uuid())
+  quantity Int
+
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String @map("order_id")
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
 }
 
 enum OrderStatus {
@@ -55,16 +66,7 @@ enum OrderStatus {
 }
 
 model Order {
-  id String @id @default(uuid())
-
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
-
-  products Product[]
-
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
-  restaurantId String     @map("restaurant_id")
-
+  id                  String      @id @default(uuid())
   status              OrderStatus
   deliveryFee         Decimal     @map("delivery_fee") @db.Decimal(10, 2)
   deliveryTimeMinutes Int         @map("delivery_time_minutes")
@@ -72,6 +74,14 @@ model Order {
   totalPrice          Decimal     @map("total_price") @db.Decimal(10, 2)
   totalDiscounts      Decimal     @map("total_discounts") @db.Decimal(10, 2)
   createdAt           DateTime    @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String     @map("restaurant_id")
+
+  products OrderProduct[]
 }
 
 model Account {
