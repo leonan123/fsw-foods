@@ -2,6 +2,7 @@
 
 import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { XIcon } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '@/app/_lib/utils'
@@ -75,15 +76,21 @@ SheetContent.displayName = SheetPrimitive.Content.displayName
 
 const SheetHeader = ({
   className,
+  children,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col space-y-2 text-center sm:text-left',
+      'flex flex-row items-center justify-between space-y-0 sm:text-left',
       className,
     )}
     {...props}
-  />
+  >
+    {children}
+    <SheetClose className="rounded-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+      <XIcon size={20} />
+    </SheetClose>
+  </div>
 )
 SheetHeader.displayName = 'SheetHeader'
 

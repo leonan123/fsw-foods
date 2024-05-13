@@ -45,6 +45,10 @@ export function CartContextProvider({
   children: React.ReactNode
 }) {
   const [products, setProducts] = useState<CartProduct[]>(() => {
+    if (typeof localStorage === 'undefined') {
+      return []
+    }
+
     const storedProducts = localStorage.getItem('@foodstorage:cart-1.0.0')
 
     if (storedProducts) {
