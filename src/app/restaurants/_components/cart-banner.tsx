@@ -1,12 +1,9 @@
 'use client'
 
-import { XIcon } from 'lucide-react'
-
 import { Cart } from '@/app/_components/cart'
 import { Button } from '@/app/_components/ui/button'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -55,9 +52,6 @@ export function CartBanner({ restaurantId }: CartBannerProps) {
         <SheetContent className="flex flex-col space-y-6 bg-primary-foreground">
           <SheetHeader className="flex flex-row items-center justify-between space-y-0">
             <SheetTitle className="text-start">Sacola</SheetTitle>
-            <SheetClose className="rounded-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-              <XIcon size={20} />
-            </SheetClose>
           </SheetHeader>
 
           <Cart />

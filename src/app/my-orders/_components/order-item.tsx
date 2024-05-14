@@ -4,10 +4,12 @@ import { Prisma } from '@prisma/client'
 import { AvatarImage } from '@radix-ui/react-avatar'
 import { ChevronRightIcon } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Avatar } from '@/app/_components/ui/avatar'
 import { Button } from '@/app/_components/ui/button'
 import { Card, CardContent } from '@/app/_components/ui/card'
+import { useCart } from '@/app/_contexts/cart'
 import { formatCurrency } from '@/app/_helpers/price'
 
 import { OrderStatus } from './order-status'
@@ -15,21 +17,10 @@ import { OrderStatus } from './order-status'
 interface OrderItemProps {
   order: Prisma.OrderGetPayload<{
     include: {
-      restaurant: {
-        select: {
-          id: true
-          name: true
-          imageUrl: true
-        }
-      }
+      restaurant: true
       products: {
         include: {
-          product: {
-            select: {
-              id: true
-              name: true
-            }
-          }
+          product: true
         }
       }
     }
@@ -37,6 +28,20 @@ interface OrderItemProps {
 }
 
 export function OrderItem({ order }: OrderItemProps) {
+  const { addProductToCart } = useCart()
+  const router = useRouter()
+
+  function handleRedoOrderClick() {
+    for (const orderProduct of order.products) {
+      addProductToCart({
+        product: { ...orderProduct.product, restaurant: order.restaurant },
+        quantity: orderProduct.quantity,
+      })
+    }
+
+    router.push(`/restaurants/${order.restaurantId}`)
+  }
+
   return (
     <Card>
       <CardContent className="space-y-3 p-5">
@@ -85,7 +90,8 @@ export function OrderItem({ order }: OrderItemProps) {
             variant="link"
             size="sm"
             className="h-auto text-xs font-semibold"
-            disabled={order.status !== 'FINISHED'}
+            // disabled={order.status !== 'FINISHED'}
+            onClick={handleRedoOrderClick}
           >
             {' '}
             Adicionar à Sacola

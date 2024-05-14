@@ -1,4 +1,5 @@
 import { StarIcon } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -6,8 +7,14 @@ import { DeliveryInfo } from '@/app/_components/delivery-info'
 import { ProductList } from '@/app/_components/product-list'
 import { db } from '@/app/_lib/prisma'
 
-import { CartBanner } from '../_components/cart-banner'
 import { RestaurantImage } from '../_components/restaurant-image'
+
+const CartBanner = dynamic(
+  () => import('../_components/cart-banner').then((mod) => mod.CartBanner),
+  {
+    ssr: false,
+  },
+)
 
 interface RestaurantPageProps {
   params: Readonly<{
@@ -103,7 +110,7 @@ export default async function RestaurantPage({
             {restaurant.categories.map((category) => (
               <div
                 key={category.id}
-                className="w-1/2 rounded-sm bg-background py-1 text-center text-sm text-muted-foreground"
+                className="w-1/2 flex-wrap rounded-sm bg-background px-3 py-1 text-center text-xs text-muted-foreground"
               >
                 {category.name}
               </div>
