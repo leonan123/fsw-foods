@@ -2,8 +2,10 @@
 
 import { OrderStatus } from '@prisma/client'
 import { Loader2Icon, NotepadTextIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 import { createOrder } from '../_actions/order'
 import {
@@ -20,9 +22,11 @@ import { formatCurrency } from '../_helpers/price'
 import { CartItem } from './cart-item'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
+import { SheetClose } from './ui/sheet'
 
 export function Cart() {
   const { data } = useSession()
+  const router = useRouter()
   const {
     products,
     subtotalPrice,
@@ -32,6 +36,7 @@ export function Cart() {
   } = useCart()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const sheetCloseRef = useRef<HTMLButtonElement>(null)
 
   async function handleFinishOrderClick() {
     if (!data?.user) return
@@ -67,6 +72,15 @@ export function Cart() {
       })
 
       clearCart()
+      sheetCloseRef.current?.click()
+
+      toast.success('Pedido finalizado com sucesso!', {
+        description: 'Você pode acompanhá-lo na tela dos seus pedidos.',
+        action: {
+          label: 'Meus Pedidos',
+          onClick: () => router.push('/my-orders'),
+        },
+      })
     } catch (err) {
       console.error(err)
       setIsSubmitting(false)
@@ -80,6 +94,10 @@ export function Cart() {
     <>
       {products.length > 0 ? (
         <>
+          <SheetClose ref={sheetCloseRef} className="sr-only">
+            Fechar Sacola
+          </SheetClose>
+
           <div className="flex flex-1 flex-col gap-4">
             {products.map((product) => (
               <CartItem key={product.id} cartProduct={product} />

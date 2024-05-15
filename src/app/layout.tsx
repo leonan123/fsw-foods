@@ -3,6 +3,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
+import { Toaster } from './_components/ui/sonner'
 import { CartContextProvider } from './_contexts/cart'
 import { AuthProvider } from './_providers/auth'
 
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <CartContextProvider>{children}</CartContextProvider>
+          <Toaster richColors />
         </AuthProvider>
       </body>
     </html>
