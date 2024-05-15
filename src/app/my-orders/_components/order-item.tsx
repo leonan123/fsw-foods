@@ -52,10 +52,11 @@ export function OrderItem({ order }: OrderItemProps) {
           href={`/restaurants/${order.restaurant.id}`}
         >
           <div className="flex items-center gap-1.5">
-            <Avatar className="size-4 rounded-full">
+            <Avatar className="size-4">
               <AvatarImage
                 src={order.restaurant.imageUrl}
                 alt={order.restaurant.name}
+                className="w-full"
               />
             </Avatar>
 
