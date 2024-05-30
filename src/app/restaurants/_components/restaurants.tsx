@@ -1,4 +1,6 @@
-import type { Restaurant } from '@prisma/client'
+'use client'
+
+import type { Restaurant, UserFavoriteRestaurant } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -7,7 +9,11 @@ import { Search } from '@/app/_components/search'
 
 import { searchRestaurants } from '../_actions/search'
 
-export function Restaurants() {
+interface RestaurantsProps {
+  userFavoriteRestaurants: UserFavoriteRestaurant[]
+}
+
+export function Restaurants({ userFavoriteRestaurants }: RestaurantsProps) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const searchParams = useSearchParams()
   const search = searchParams.get('search')
@@ -37,6 +43,7 @@ export function Restaurants() {
               key={restaurant.id}
               restaurant={restaurant}
               className="min-w-full max-w-full"
+              userFavoriteRestaurants={userFavoriteRestaurants}
             />
           ))}
         </div>

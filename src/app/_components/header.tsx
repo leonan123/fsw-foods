@@ -114,7 +114,7 @@ export function Header() {
                   className="w-full justify-start gap-3 rounded-full border-none"
                   variant="outline"
                 >
-                  <Link href="/">
+                  <Link href="/restaurants/favorites">
                     <HomeIcon size={16} />
                     <span className="text-sm font-normal">
                       Restaurantes Favoritos

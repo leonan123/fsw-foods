@@ -1,8 +1,13 @@
-import type { Restaurant } from '@prisma/client'
+'use client'
+
+import type { Restaurant, UserFavoriteRestaurant } from '@prisma/client'
 import { BikeIcon, HeartIcon, StarIcon, TimerIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { toast } from 'sonner'
 
+import { toggleFavoriteRestaurant } from '../_actions/restaurant'
 import { formatCurrency } from '../_helpers/price'
 import { cn } from '../_lib/utils'
 import { Button } from './ui/button'
@@ -10,14 +15,37 @@ import { Button } from './ui/button'
 interface RestaurantItemProps {
   restaurant: Restaurant
   className?: string
+  userFavoriteRestaurants: UserFavoriteRestaurant[]
 }
 
-export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
+export function RestaurantItem({
+  restaurant,
+  userFavoriteRestaurants,
+  className,
+}: RestaurantItemProps) {
+  const { data } = useSession()
+  const isFavorite = userFavoriteRestaurants?.some(
+    (favoriteRestaurant) => favoriteRestaurant.restaurantId === restaurant.id,
+  )
+
+  async function handleFavoriteClick() {
+    if (!data?.user.id) return
+
+    try {
+      await toggleFavoriteRestaurant(data.user.id, restaurant.id)
+
+      toast.success(
+        isFavorite
+          ? 'Restaurante removido dos favoritos.'
+          : 'Restaurante favoritado.',
+      )
+    } catch {
+      toast.error('Ocorreu um erro ao favoritar o restaurante.')
+    }
+  }
+
   return (
-    <Link
-      className={cn('min-w-[266px] max-w-[266px] space-y-3', className)}
-      href={`/restaurants/${restaurant.id}`}
-    >
+    <div className={cn('min-w-[266px] max-w-[266px] space-y-3', className)}>
       <div className="relative h-[136px] w-full">
         <div className="absolute left-2 top-2 z-10 flex items-center gap-1 rounded-full bg-muted px-2 py-0.5">
           <StarIcon
@@ -28,20 +56,32 @@ export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
           <span className="text-sm font-bold">5.0</span>
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="group absolute right-2 top-2 z-10 h-7 w-7 rounded-full bg-foreground hover:bg-primary"
-        >
-          <HeartIcon size={16} className="fill-muted text-muted" />
-        </Button>
+        {data?.user.id && (
+          <Button
+            onClick={handleFavoriteClick}
+            variant="ghost"
+            size="icon"
+            className={cn(
+              'group absolute right-2 top-2 z-10 h-7 w-7 rounded-full bg-foreground hover:bg-primary',
+              isFavorite && 'bg-primary hover:bg-foreground',
+            )}
+          >
+            <HeartIcon size={16} className="fill-muted text-muted" />
+          </Button>
+        )}
 
-        <Image
-          src={restaurant.imageUrl}
-          alt={restaurant.name}
-          fill
-          className="rounded-lg object-cover"
-        />
+        <Link
+          href={`/restaurants/${restaurant.id}`}
+          className="absolute h-full w-full"
+        >
+          <Image
+            src={restaurant.imageUrl}
+            alt={restaurant.name}
+            fill
+            className="rounded-lg object-cover"
+            sizes="150px"
+          />
+        </Link>
       </div>
 
       <div>
@@ -65,6 +105,6 @@ export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
