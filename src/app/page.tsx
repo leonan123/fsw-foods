@@ -1,5 +1,6 @@
 import { ChevronRightIcon } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 import { CategoryList } from './_components/category-list'
 import { Header } from './_components/header'
@@ -31,9 +32,11 @@ export default async function Home() {
     <div>
       <Header />
 
-      <div className="mt-6 px-5">
-        <Search />
-      </div>
+      <Suspense>
+        <div className="mt-6 px-5">
+          <Search />
+        </div>
+      </Suspense>
 
       <div className="mt-6 px-5">
         <CategoryList />
