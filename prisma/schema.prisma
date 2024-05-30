@@ -15,8 +15,19 @@ model Restaurant {
   deliveryTimeMinutes Int        @map("delivery_time_minutes")
   categories          Category[]
 
-  products Product[]
-  Order    Order[]
+  products          Product[]
+  Order             Order[]
+  usersWhoFavorited UserFavouriteRestaurant[]
+}
+
+model UserFavouriteRestaurant {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  restaurantId String   @map("restaurant_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
 }
 
 model Category {
@@ -115,14 +126,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Order         Order[]
+  id                      String                    @id @default(cuid())
+  name                    String?
+  email                   String?                   @unique
+  emailVerified           DateTime?                 @map("email_verified")
+  image                   String?
+  accounts                Account[]
+  sessions                Session[]
+  Order                   Order[]
+  userFavouriteRestaurant UserFavouriteRestaurant[]
 
   @@map("users")
 }
