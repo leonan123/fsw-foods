@@ -17,17 +17,18 @@ model Restaurant {
 
   products          Product[]
   Order             Order[]
-  usersWhoFavorited UserFavouriteRestaurant[]
+  usersWhoFavorited UserFavoriteRestaurant[]
 }
 
-model UserFavouriteRestaurant {
-  id           String   @id @default(uuid())
+model UserFavoriteRestaurant {
   userId       String   @map("user_id")
   restaurantId String   @map("restaurant_id")
   createdAt    DateTime @default(now()) @map("created_at")
 
   user       User       @relation(fields: [userId], references: [id])
   restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  @@id([userId, restaurantId])
 }
 
 model Category {
@@ -126,15 +127,15 @@ model Session {
 }
 
 model User {
-  id                      String                    @id @default(cuid())
-  name                    String?
-  email                   String?                   @unique
-  emailVerified           DateTime?                 @map("email_verified")
-  image                   String?
-  accounts                Account[]
-  sessions                Session[]
-  Order                   Order[]
-  userFavouriteRestaurant UserFavouriteRestaurant[]
+  id                  String                   @id @default(cuid())
+  name                String?
+  email               String?                  @unique
+  emailVerified       DateTime?                @map("email_verified")
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  order               Order[]
+  favoriteRestaurants UserFavoriteRestaurant[]
 
   @@map("users")
 }
