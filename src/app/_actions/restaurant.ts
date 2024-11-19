@@ -1,6 +1,7 @@
 'use server'
-import { revalidatePath } from 'next/cache'
+import type { Prisma } from '@prisma/client'
 
+// import { revalidatePath } from 'next/cache'
 import { db } from '../_lib/prisma'
 
 export async function toggleFavoriteRestaurant(
@@ -24,9 +25,7 @@ export async function toggleFavoriteRestaurant(
       },
     })
 
-    revalidatePath('/')
-
-    return
+    // revalidatePath('/')
   }
 
   await db.userFavoriteRestaurant.create({
@@ -36,5 +35,37 @@ export async function toggleFavoriteRestaurant(
     },
   })
 
-  revalidatePath('/')
+  // revalidatePath('/')
+}
+
+type UserFavoriteRestaurantWithRestaurant =
+  Prisma.UserFavoriteRestaurantGetPayload<{
+    include: {
+      restaurant: {
+        select: {
+          id: true
+        }
+      }
+    }
+  }>
+
+export async function getUserFavoriteRestaurants(
+  userId?: string,
+): Promise<UserFavoriteRestaurantWithRestaurant[] | []> {
+  if (!userId) return []
+
+  const userFavoriteRestaurants = await db.userFavoriteRestaurant.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      restaurant: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  })
+
+  return userFavoriteRestaurants
 }

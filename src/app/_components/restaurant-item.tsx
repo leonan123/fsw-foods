@@ -1,48 +1,22 @@
 'use client'
 
-import type { Restaurant, UserFavoriteRestaurant } from '@prisma/client'
-import { BikeIcon, HeartIcon, StarIcon, TimerIcon } from 'lucide-react'
+import type { Restaurant } from '@prisma/client'
+import { BikeIcon, StarIcon, TimerIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { toast } from 'sonner'
 
-import { toggleFavoriteRestaurant } from '../_actions/restaurant'
 import { formatCurrency } from '../_helpers/price'
 import { cn } from '../_lib/utils'
-import { Button } from './ui/button'
+import { FavoriteRestaurantButton } from './favorite-restaurant-button'
 
 interface RestaurantItemProps {
   restaurant: Restaurant
   className?: string
-  userFavoriteRestaurants: UserFavoriteRestaurant[]
 }
 
-export function RestaurantItem({
-  restaurant,
-  userFavoriteRestaurants,
-  className,
-}: RestaurantItemProps) {
+export function RestaurantItem({ restaurant, className }: RestaurantItemProps) {
   const { data } = useSession()
-  const isFavorite = userFavoriteRestaurants?.some(
-    (favoriteRestaurant) => favoriteRestaurant.restaurantId === restaurant.id,
-  )
-
-  async function handleFavoriteClick() {
-    if (!data?.user.id) return
-
-    try {
-      await toggleFavoriteRestaurant(data.user.id, restaurant.id)
-
-      toast.success(
-        isFavorite
-          ? 'Restaurante removido dos favoritos.'
-          : 'Restaurante favoritado.',
-      )
-    } catch {
-      toast.error('Ocorreu um erro ao favoritar o restaurante.')
-    }
-  }
 
   return (
     <div className={cn('min-w-[266px] max-w-[266px] space-y-3', className)}>
@@ -57,17 +31,7 @@ export function RestaurantItem({
         </div>
 
         {data?.user.id && (
-          <Button
-            onClick={handleFavoriteClick}
-            variant="ghost"
-            size="icon"
-            className={cn(
-              'group absolute right-2 top-2 z-10 h-7 w-7 rounded-full bg-foreground hover:bg-primary',
-              isFavorite && 'bg-primary hover:bg-foreground',
-            )}
-          >
-            <HeartIcon size={16} className="fill-muted text-muted" />
-          </Button>
+          <FavoriteRestaurantButton restaurantId={restaurant.id} />
         )}
 
         <Link

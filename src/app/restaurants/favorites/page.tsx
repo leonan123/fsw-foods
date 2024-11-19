@@ -31,7 +31,6 @@ export default async function FavoriteRestaurantsPage() {
               key={restaurant.id}
               className="min-w-full max-w-full"
               restaurant={restaurant}
-              userFavoriteRestaurants={userFavoriteRestaurants}
             />
           ))
         ) : (
